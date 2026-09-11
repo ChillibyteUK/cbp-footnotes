@@ -1,0 +1,21 @@
+.cbp-footnotes-box {
+	margin-top: 2rem;
+	padding: 1rem 1.25rem;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 0.875em;
+}
+
+.cbp-footnotes-box .cbp-footnotes-list {
+	margin: 0;
+	padding-left: 1.25rem;
+}
+
+.cbp-footnotes-box .cbp-footnotes-list li + li {
+	margin-top: 0.5em;
+}
+
+.cbp-footnote-backlink {
+	text-decoration: none;
+	margin-left: 0.25em;
+}
