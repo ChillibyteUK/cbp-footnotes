@@ -19,3 +19,10 @@
 	text-decoration: none;
 	margin-left: 0.25em;
 }
+
+/* Anchor targets (list entries and the in-text backlink targets): land
+   below fixed headers. Themes here expose --nav-height (or --h-top);
+   with neither defined this degrades to breathing room only. */
+[id^="footnote-"] {
+	scroll-margin-top: calc(var(--nav-height, var(--h-top, 0px)) + 1rem);
+}

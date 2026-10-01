@@ -3,7 +3,7 @@
  * Plugin Name: CB Footnotes
  * Plugin URI:  https://github.com/ChillibyteUK/cbp-footnotes
  * Description: Adds [Footnote]...[/Footnote] tag support to content — converts tagged text into numbered, linked footnotes with a single running counter per page.
- * Version:     1.0.0
+ * Version:     1.0.1
  * Author:      Chillibyte - DS
  * License:     GPL v2 or later
  *
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'CB_FOOTNOTES_VERSION' ) ) {
-	define( 'CB_FOOTNOTES_VERSION', '1.0.0' );
+	define( 'CB_FOOTNOTES_VERSION', '1.0.1' );
 }
 if ( ! defined( 'CB_FOOTNOTES_PLUGIN_URL' ) ) {
 	define( 'CB_FOOTNOTES_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -28,7 +28,7 @@ if ( ! class_exists( 'CBFootnotes' ) ) {
 	 * Class CBFootnotes
 	 *
 	 * Extracts [Footnote]...[/Footnote] tags from content, replacing them with
-	 * numbered superscript links, and renders the collected footnote list.
+	 * numbered bracketed links, and renders the collected footnote list.
 	 * Unlike the theme implementation this was ported from, this uses a single
 	 * running counter for the whole page request rather than per-section
 	 * counters — simpler to reason about when a site only needs one list.
@@ -111,6 +111,16 @@ if ( ! class_exists( 'CBFootnotes' ) ) {
 				return $content;
 			}
 
+			// Only the main loop feeds the single running counter. Anything
+			// else that runs content through the_content (SEO/schema/TOC
+			// pre-passes outside the loop, related-post loops) must not
+			// consume indices or trigger the list: otherwise numbering
+			// restarts mid-page and the list lands in discarded output —
+			// i.e. visible footnotes starting at [4] with no list in the DOM.
+			if ( ! in_the_loop() || ! is_main_query() ) {
+				return $content;
+			}
+
 			$has_shortcode = has_shortcode( $content, 'cbp_footnotes' );
 
 			$content = preg_replace_callback(
@@ -143,18 +153,18 @@ if ( ! class_exists( 'CBFootnotes' ) ) {
 			return $this->link_to_footnote( $footnote );
 		}
 
-		/**
-		 * Build the superscript link markup pointing at a footnote's list entry.
-		 *
-		 * @param stdClass $footnote Footnote object.
-		 * @return string HTML link.
-		 */
-		private function link_to_footnote( $footnote ) {
-			return sprintf(
-				'<a href="#footnote-%1$d" id="footnote-ref-%1$d" class="footnote-link"><sup>%1$d</sup></a>',
-				(int) $footnote->index
-			);
-		}
+	/**
+	 * Build the bracketed link markup pointing at a footnote's list entry.
+	 *
+	 * @param stdClass $footnote Footnote object.
+	 * @return string HTML link.
+	 */
+	private function link_to_footnote( $footnote ) {
+		return sprintf(
+			'<a href="#footnote-%1$d" id="footnote-ref-%1$d" class="footnote-link">[%1$d]</a>',
+			(int) $footnote->index
+		);
+	}
 
 		/**
 		 * Whether any footnotes have been collected so far this request.

@@ -14,7 +14,7 @@ Wrap any text in a post/page (or ACF field processed via the helper below) with 
 Some claim that needs a source.[Footnote]This is the footnote text, shown in the list at the bottom of the page.[/Footnote]
 ```
 
-This is replaced with a numbered superscript link, e.g. `Some claim that needs a source.[1]`, and the footnote text is collected for display in a list.
+This is replaced with a numbered bracketed link, e.g. `Some claim that needs a source.[1]`, and the footnote text is collected for display in a list.
 
 ### Displaying the list
 
@@ -49,8 +49,10 @@ The footnote list is wrapped in `<div class="container cbp-footnotes-box">`, sty
 
 ## Features
 
-- `[Footnote]...[/Footnote]` tags converted to numbered links + backlinked list entries
+- `[Footnote]...[/Footnote]` tags converted to bracketed links + backlinked list entries
 - Single running counter per page request — no section/scope configuration needed
+- Only main-loop content feeds the counter: `the_content` runs outside the main loop (SEO/schema/TOC pre-passes, related-post loops) are left untouched, so a discarded pre-pass can neither consume numbers nor trigger the list early. Symptom this prevents: visible footnotes starting at [4] with no list in the DOM.
+- Anchor targets carry `scroll-margin-top` derived from `--nav-height` (or `--h-top`), so jumps land below fixed headers
 - Footnote list auto-appended to the end of the main content by default, wrapped in a bordered box
 - `[cbp_footnotes]` shortcode for placing the list elsewhere within that same content
 - `cbp_footnotes_process()` helper for processing content outside the main loop
