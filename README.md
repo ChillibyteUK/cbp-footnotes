@@ -33,7 +33,7 @@ $content = cbp_footnotes_process( get_field( 'my_field' ) );
 
 ## Styling
 
-The footnote list is wrapped in `<div class="container cbp-footnotes-box">`, styled by `assets/cbp-footnotes.css` as a simple bordered box (light border, rounded corners, padding). The `container` class keeps it lined up with the theme's width-constrained content — needed on themes (like `hub-gsct2026`) that wrap each block in its own `.container` rather than wrapping the whole page, since the appended footnote list is otherwise just a trailing sibling with no width constraint of its own. There's no settings page for this — override it per site instead:
+The footnote list is wrapped in `<div class="cbp-footnotes-box">`, styled by `assets/cbp-footnotes.css` as a simple bordered box (light border, rounded corners, padding). The wrapper carries no width-constraint class — it inherits its width from the surrounding content column. There's no settings page for this — override it per site instead:
 
 - **Swap the wrapper class** — return your own class name(s) from the `cbp_footnotes_wrapper_class` filter (e.g. if a theme's width-constraint class isn't called `container`), then style that class in your theme:
   ```php

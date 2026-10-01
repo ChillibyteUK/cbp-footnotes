@@ -161,7 +161,7 @@ if ( ! class_exists( 'CBFootnotes' ) ) {
 	 */
 	private function link_to_footnote( $footnote ) {
 		return sprintf(
-			'<a href="#footnote-%1$d" id="footnote-ref-%1$d" class="footnote-link">[%1$d]</a>',
+			'<a href="#footnote-%1$d" id="footnote-ref-%1$d" class="footnote-link"><sup>[%1$d]</sup></a>',
 			(int) $footnote->index
 		);
 	}
@@ -193,20 +193,20 @@ if ( ! class_exists( 'CBFootnotes' ) ) {
 		}
 
 		/**
-		 * Build the footnote list markup, wrapped in a container div.
-		 *
-		 * The wrapper defaults to `container cbp-footnotes-box` — `container`
-		 * so it lines up with the theme's width-constrained content rather
-		 * than bleeding full-width (most themes define a `.container` class
-		 * for this, Bootstrap-derived or not), and `cbp-footnotes-box` for the
-		 * bordered-box styling in assets/cbp-footnotes.css. If a theme uses a
-		 * different class for this, swap it in via the `cbp_footnotes_wrapper_class`
-		 * filter (space-separated) instead of overriding the plugin's CSS.
-		 *
-		 * @return string Footnote list HTML.
-		 */
-		private function render_html() {
-			$wrapper_class = apply_filters( 'cbp_footnotes_wrapper_class', 'container cbp-footnotes-box' );
+	 * Build the footnote list markup, wrapped in a container div.
+	 *
+	 * The wrapper defaults to plain `cbp-footnotes-box` — no width-constraint
+	 * class: the list inherits its width from wherever the content renders
+	 * (e.g. single.php's article column), and a nested `.container` would
+	 * trip the theme's nested-container padding reset. If a theme needs the
+	 * list constrained elsewhere, swap a class in via the
+	 * `cbp_footnotes_wrapper_class` filter (space-separated) instead of
+	 * overriding the plugin's CSS.
+	 *
+	 * @return string Footnote list HTML.
+	 */
+	private function render_html() {
+		$wrapper_class = apply_filters( 'cbp_footnotes_wrapper_class', 'cbp-footnotes-box' );
 
 			ob_start();
 			?>
